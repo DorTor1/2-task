@@ -13,13 +13,13 @@ export const userLoginSchema = z.object({
 
 export const userProfileUpdateSchema = z.object({
   name: z.string().min(1).optional(),
-  roles: z.array(z.string()).min(1).optional(),
+  roles: z.array(z.enum(['engineer', 'manager', 'admin', 'supervisor'])).optional(),
 });
 
 export const userQuerySchema = z.object({
   page: z.coerce.number().min(1).optional(),
   pageSize: z.coerce.number().min(1).max(100).optional(),
-  role: z.string().optional(),
+  role: z.enum(['engineer', 'manager', 'admin', 'supervisor']).optional(),
   email: z.string().optional(),
 });
 
