@@ -1,0 +1,38 @@
+{
+  "name": "task-control-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Task management microservices platform for construction objects",
+  "scripts": {
+    "build": "npm run build -ws",
+    "lint": "npm run lint -ws",
+    "test": "npm run test -ws",
+    "dev": "npm run dev -w api_gateway",
+    "dev:users": "npm run dev -w service_users",
+    "dev:orders": "npm run dev -w service_orders"
+  },
+  "workspaces": [
+    "api_gateway",
+    "service_users",
+    "service_orders",
+    "packages/shared"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
