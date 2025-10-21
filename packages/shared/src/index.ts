@@ -8,4 +8,6 @@ export * from './middlewares/rate-limit';
 export * from './utils/jwt';
 export * from './utils/pagination';
 export * from './utils/trace';
+export * from './validation';
+export * from './events';
 

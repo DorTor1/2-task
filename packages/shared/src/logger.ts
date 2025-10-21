@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 import pinoHttp, { Options as PinoHttpOptions } from 'pino-http';
 import { getRequestContext } from './middlewares/request-context';
@@ -31,7 +32,7 @@ export const createHttpLogger = (
     },
     genReqId: (req) => {
       const headerId = req.headers['x-request-id'];
-      return (Array.isArray(headerId) ? headerId[0] : headerId) ?? baseLogger.uuid();
+      return (Array.isArray(headerId) ? headerId[0] : headerId) ?? randomUUID();
     },
     customProps: () => {
       const ctx = getRequestContext();
