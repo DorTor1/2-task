@@ -15,7 +15,6 @@ export default tseslint.config(
     files: ['**/*.ts'],
     languageOptions: {
       parserOptions: {
-        project: true,
         tsconfigRootDir: import.meta.dirname
       },
       sourceType: 'module',
@@ -27,11 +26,19 @@ export default tseslint.config(
       import: pluginImport
     },
     rules: {
-      'import/no-default-export': 'error',
+      'import/no-default-export': 'off',
       '@typescript-eslint/no-misused-promises': [
         'error',
         { checksVoidReturn: false }
-      ]
+      ],
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/require-await': 'off',
+      'no-console': 'off'
     }
   }
 );

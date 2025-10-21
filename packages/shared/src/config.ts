@@ -16,7 +16,25 @@ const getNumberEnv = (key: string, fallback: number) => {
   return parsed;
 };
 
-export const getConfig = () => {
+export interface ServiceConfig {
+  env: string;
+  logLevel: string;
+  jwtSecret: string;
+  jwtExpiresIn: string;
+  databaseUrl?: string;
+  apiGatewayPort: number;
+  userServicePort: number;
+  orderServicePort: number;
+  userServiceUrl: string;
+  orderServiceUrl: string;
+  serviceApiKey: string;
+  defaultAdminEmail: string;
+  defaultAdminPassword: string;
+  defaultAdminName: string;
+  requestTimeoutMs: number;
+}
+
+export const getConfig = (): ServiceConfig => {
   const jwtSecret = getEnv('JWT_SECRET', 'dev-secret');
   if (!jwtSecret) {
     throw new Error('Missing required env variable JWT_SECRET');
@@ -31,9 +49,13 @@ export const getConfig = () => {
     apiGatewayPort: getNumberEnv('API_GATEWAY_PORT', 3000),
     userServicePort: getNumberEnv('USER_SERVICE_PORT', 3001),
     orderServicePort: getNumberEnv('ORDER_SERVICE_PORT', 3002),
-    userServiceUrl: getEnv('USER_SERVICE_URL', 'http://service_users:3001') ?? 'http://service_users:3001',
-    orderServiceUrl: getEnv('ORDER_SERVICE_URL', 'http://service_orders:3002') ?? 'http://service_orders:3002',
+    userServiceUrl: getEnv('USER_SERVICE_URL', 'http://localhost:3001') ?? 'http://localhost:3001',
+    orderServiceUrl: getEnv('ORDER_SERVICE_URL', 'http://localhost:3002') ?? 'http://localhost:3002',
     serviceApiKey: getEnv('SERVICE_API_KEY', 'internal-secret') ?? 'internal-secret',
+    defaultAdminEmail: getEnv('DEFAULT_ADMIN_EMAIL', 'admin@example.com') ?? 'admin@example.com',
+    defaultAdminPassword: getEnv('DEFAULT_ADMIN_PASSWORD', 'Admin1234!') ?? 'Admin1234!',
+    defaultAdminName: getEnv('DEFAULT_ADMIN_NAME', 'Project Admin') ?? 'Project Admin',
+    requestTimeoutMs: getNumberEnv('REQUEST_TIMEOUT_MS', 5000),
   };
 };
 

@@ -9,7 +9,11 @@
     "test": "npm run test -ws",
     "dev": "npm run dev -w api_gateway",
     "dev:users": "npm run dev -w service_users",
-    "dev:orders": "npm run dev -w service_orders"
+    "dev:orders": "npm run dev -w service_orders",
+    "start:dev": "docker-compose up --build",
+    "start:test": "docker-compose --env-file docker/test/api_gateway.env --env-file docker/test/service_users.env --env-file docker/test/service_orders.env up --build",
+    "start:prod": "docker-compose --env-file docker/prod/api_gateway.env --env-file docker/prod/service_users.env --env-file docker/prod/service_orders.env up --build",
+    "stop": "docker-compose down"
   },
   "workspaces": [
     "api_gateway",

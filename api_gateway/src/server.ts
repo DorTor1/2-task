@@ -1,9 +1,16 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import proxy from 'express-http-proxy';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { createHttpLogger, getConfig, requestContextMiddleware, traceMiddleware, authenticate, createRateLimiter, errorHandler } from '@task-platform/shared';
+import {
+  createHttpLogger,
+  getConfig,
+  requestContextMiddleware,
+  traceMiddleware,
+  authenticate,
+  createRateLimiter,
+  errorHandler,
+} from '@task-platform/shared';
 
 const config = getConfig();
 const app = express();
@@ -25,43 +32,34 @@ app.get('/health', (_req, res) => {
   res.json({ success: true, data: { status: 'ok' } });
 });
 
-const proxyOptions = (target: string) => ({
-  target,
-  changeOrigin: true,
-  pathRewrite: { '^/v1/users': '', '^/v1/orders': '' },
-  onProxyReq: (proxyReq: any, req: any) => {
-    if (req.headers['x-request-id']) {
-      proxyReq.setHeader('x-request-id', req.headers['x-request-id']);
-    }
-    if (req.headers['x-trace-id']) {
-      proxyReq.setHeader('x-trace-id', req.headers['x-trace-id']);
-    }
-    if (req.headers['x-span-id']) {
-      proxyReq.setHeader('x-parent-span-id', req.headers['x-span-id']);
-    }
-  },
-  onProxyRes: (proxyRes: any, req: any, res: any) => {
-    const traceId = proxyRes.headers['x-trace-id'] ?? req.headers['x-trace-id'];
-    if (traceId) {
-      res.setHeader('x-trace-id', traceId);
-    }
-  },
-});
+const createProxy = (target: string) =>
+  createProxyMiddleware({
+    target,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/v1/users': '',
+      '^/v1/orders': '',
+    },
+    onProxyReq: (proxyReq, req) => {
+      const headersToForward = ['x-request-id', 'x-trace-id', 'x-span-id', 'authorization'];
+      headersToForward.forEach((header) => {
+        const value = req.headers[header];
+        if (value) {
+          proxyReq.setHeader(header, value);
+        }
+      });
+    },
+  });
 
-app.use(
-  '/v1/users',
-  express.Router()
-    .post('/register', proxy(config.userServiceUrl, { proxyReqPathResolver: (req) => `${config.userServiceUrl}${req.url}` }))
-    .post('/login', proxy(config.userServiceUrl, { proxyReqPathResolver: (req) => `${config.userServiceUrl}${req.url}` }))
-    .use(authenticate())
-    .use(createProxyMiddleware(proxyOptions(config.userServiceUrl)))
-);
+const usersRouter = express.Router();
 
-app.use(
-  '/v1/orders',
-  authenticate(),
-  createProxyMiddleware(proxyOptions(config.orderServiceUrl))
-);
+usersRouter.post('/register', createProxy(config.userServiceUrl));
+usersRouter.post('/login', createProxy(config.userServiceUrl));
+usersRouter.use(authenticate());
+usersRouter.use(createProxy(config.userServiceUrl));
+
+app.use('/v1/users', usersRouter);
+app.use('/v1/orders', authenticate(), createProxy(config.orderServiceUrl));
 
 app.use(errorHandler);
 

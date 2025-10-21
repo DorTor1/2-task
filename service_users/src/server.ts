@@ -56,6 +56,29 @@ const findUserByEmail = (email: string) => {
   return undefined;
 };
 
+const bootstrapAdmin = async () => {
+  const existingAdmin = findUserByEmail(config.defaultAdminEmail);
+  if (existingAdmin) {
+    return;
+  }
+
+  const passwordHash = await bcrypt.hash(config.defaultAdminPassword, 10);
+  const now = new Date().toISOString();
+  const id = crypto.randomUUID();
+
+  const admin: User = {
+    id,
+    email: config.defaultAdminEmail,
+    passwordHash,
+    name: config.defaultAdminName,
+    roles: ['admin', 'manager'],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  users.set(id, admin);
+};
+
 app.use(requestContextMiddleware);
 app.use(traceMiddleware);
 app.use(logger);
@@ -234,9 +257,11 @@ app.use(errorHandler);
 
 const port = config.userServicePort;
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`User service running on port ${port}`);
+bootstrapAdmin().then(() => {
+  app.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`User service running on port ${port}`);
+  });
 });
 
 export default app;
