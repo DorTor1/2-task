@@ -8,7 +8,7 @@ const orderItemSchema = z.object({
 });
 
 export const orderCreateSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string().uuid().optional(),
   items: z.array(orderItemSchema).min(1),
 });
 
