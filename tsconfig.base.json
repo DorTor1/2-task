@@ -11,12 +11,10 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@task-platform/shared": ["packages/shared/src/index"],
-      "@task-platform/shared/*": ["packages/shared/src/*"]
-    }
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "baseUrl": "."
   },
+  "include": ["types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
 

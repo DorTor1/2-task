@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import { createProxyMiddleware, type Options as ProxyOptions } from 'http-proxy-middleware';
 import {
   createHttpLogger,
   getConfig,
@@ -32,6 +32,8 @@ app.get('/health', (_req, res) => {
   res.json({ success: true, data: { status: 'ok' } });
 });
 
+type Headers = Record<string, string | string[] | undefined>;
+
 const createProxy = (target: string) =>
   createProxyMiddleware({
     target,
@@ -40,16 +42,20 @@ const createProxy = (target: string) =>
       '^/v1/users': '',
       '^/v1/orders': '',
     },
-    onProxyReq: (proxyReq, req) => {
-      const headersToForward = ['x-request-id', 'x-trace-id', 'x-span-id', 'authorization'];
-      headersToForward.forEach((header) => {
-        const value = req.headers[header];
-        if (value) {
-          proxyReq.setHeader(header, value);
-        }
-      });
+    on: {
+      proxyReq: (proxyReq, req) => {
+        const headersToForward = ['x-request-id', 'x-trace-id', 'x-span-id', 'authorization'] as const;
+        headersToForward.forEach((header) => {
+          const value = req.headers[header];
+          if (Array.isArray(value)) {
+            proxyReq.setHeader(header, value[0]);
+          } else if (value) {
+            proxyReq.setHeader(header, value);
+          }
+        });
+      },
     },
-  });
+  } satisfies ProxyOptions);
 
 const usersRouter = express.Router();
 

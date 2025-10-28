@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build -w service_users
+RUN npm run build -w @task-platform/shared && npm run build -w service_users
 
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -21,6 +21,7 @@ ENV NODE_ENV=production
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/service_users/dist ./service_users/dist
+COPY --from=builder /app/packages/shared ./packages/shared
 COPY service_users/package.json ./service_users/package.json
 
 CMD ["node", "service_users/dist/server.js"]

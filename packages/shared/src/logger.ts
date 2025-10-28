@@ -39,8 +39,9 @@ export const createHttpLogger = (
       return ctx ? { requestId: ctx.requestId, userId: ctx.userId } : {};
     },
     customLogLevel: (res, err) => {
-      if (err || res.statusCode >= 500) return 'error';
-      if (res.statusCode >= 400) return 'warn';
+      const status = res.statusCode ?? 200;
+      if (err || status >= 500) return 'error';
+      if (status >= 400) return 'warn';
       return 'info';
     },
     ...extra,

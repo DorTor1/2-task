@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node", "jest", "@types/supertest"]
+  },
+  "include": [
+    "tests/**/*.ts",
+    "packages/shared/src/**/*.ts",
+    "api_gateway/src/**/*.ts",
+    "service_users/src/**/*.ts",
+    "service_orders/src/**/*.ts"
+  ]
+}

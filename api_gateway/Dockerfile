@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build -w api_gateway
+RUN npm run build -w @task-platform/shared && npm run build -w api_gateway
 
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -21,6 +21,7 @@ ENV NODE_ENV=production
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/api_gateway/dist ./api_gateway/dist
+COPY --from=builder /app/packages/shared ./packages/shared
 COPY api_gateway/package.json ./api_gateway/package.json
 
 CMD ["node", "api_gateway/dist/server.js"]
