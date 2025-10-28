@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  background: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.12), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.12), transparent 45%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 40%, #f8fafc 100%);
+  color: #0f172a;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.glass-panel {
+  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 60px -30px rgba(15, 23, 42, 0.4);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(14, 165, 233, 0.9) 100%);
+  color: #ffffff;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.muted-text {
+  color: #64748b;
+}

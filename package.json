@@ -13,13 +13,15 @@
     "start:dev": "docker-compose up --build",
     "start:test": "docker-compose --env-file docker/test/api_gateway.env --env-file docker/test/service_users.env --env-file docker/test/service_orders.env up --build",
     "start:prod": "docker-compose --env-file docker/prod/api_gateway.env --env-file docker/prod/service_users.env --env-file docker/prod/service_orders.env up --build",
+    "start:ui": "npm run start -w web_client",
     "stop": "docker-compose down"
   },
   "workspaces": [
     "api_gateway",
     "service_users",
     "service_orders",
-    "packages/shared"
+    "packages/shared",
+    "web_client"
   ],
   "engines": {
     "node": ">=20.9.0"
